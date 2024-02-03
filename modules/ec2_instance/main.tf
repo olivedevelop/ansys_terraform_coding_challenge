@@ -8,6 +8,14 @@ resource "aws_instance" "my_ec2_instance" {
   }
 }
 
+provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update",
+      "sudo apt-get install -y nginx",
+      "sudo service nginx start",
+    ]
+  }
+
 resource "aws_security_group" "allow_http" {
   name        = "allow_http"
   description = "Allow inbound HTTP traffic"
