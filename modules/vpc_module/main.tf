@@ -9,7 +9,7 @@ resource "aws_vpc" "my_vpc" {
 }
 
 resource "aws_subnet" "public_subnet" {
-  count = 3
+  count = length(var.availability_zones)
 
   vpc_id                  = aws_vpc.my_vpc.id
   cidr_block              = "10.0.${count.index + 1}.0/24"
@@ -22,7 +22,7 @@ resource "aws_subnet" "public_subnet" {
 }
 
 resource "aws_subnet" "private_subnet" {
-  count = 3
+  count = length(var.availability_zones)
 
   vpc_id                  = aws_vpc.my_vpc.id
   cidr_block              = "10.0.${count.index + 4}.0/24"
@@ -31,4 +31,12 @@ resource "aws_subnet" "private_subnet" {
   tags = {
     Name = "PrivateSubnet-${count.index + 1}"
   }
+}
+
+output "vpc_id" {
+  value = aws_vpc.my_vpc.id
+}
+
+output "public_subnets" {
+  value = aws_subnet.public_subnet[*].id
 }
